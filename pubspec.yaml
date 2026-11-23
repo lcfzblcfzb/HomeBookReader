@@ -1,0 +1,57 @@
+name: home_pdf_reader
+description: 本地优先、无账号的跨端 PDF / EPUB 阅读器。
+publish_to: none
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.10.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  # PDF 渲染（版本在 M0 锁定，升级需单独评审）
+  pdfrx: 2.12.1
+  # 依赖注入与全局状态
+  flutter_riverpod: 3.5.0
+  # 路由
+  go_router: 18.1.4
+  # 本地数据库
+  drift: 2.35.4
+  drift_flutter: 0.3.1
+  path: 1.9.1
+  path_provider: 2.1.6
+  crypto: 3.0.8
+  uuid: 4.6.0
+  file_picker: 13.3.3
+  # EPUB 解析：ZIP 容器与 OPF/NCX/nav XHTML
+  archive: ^4.7.1
+  xml: ^7.1.0
+  # 直接依赖 Android 实现，用于取回被系统打断的选择结果（LostDataStore）
+  android_file_picker: 2.1.6
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  integration_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  drift_dev: ^2.35.0
+  build_runner: ^2.4.14
+  # 迁移测试直接构造 v1 旧库
+  sqlite3: ^3.9.1
+  # 导入测试固定 AppPaths 根目录
+  path_provider_platform_interface: ^2.1.3
+
+flutter:
+  uses-material-design: true
+  assets:
+    # 书签入口图（彩色猫图标，1x/2x/3x + 母版）；缺失时组件回退到代码绘制占位
+    - assets/images/bookmark/
+
+# sqlite3 的构建钩子默认从 GitHub Releases 下载预编译库，国内网络常超时。
+# 走镜像下载，包内自带的 sha256 校验仍然生效；网络直达 GitHub 时可删除本节。
+hooks:
+  user_defines:
+    sqlite3:
+      source: sqlite3
+      url_pattern: "https://ghfast.top/https://github.com/simolus3/sqlite3.dart/releases/download/$RELEASE_TAG/$FILENAME"
